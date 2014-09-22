@@ -159,7 +159,7 @@ public class Config {
 		return configFile.getProperty("svmrankFolderPath");
 	}
 	
-	public String getFeaturedIndexPath()
+	public static String getFeaturedIndexPath()
 	{
 		if (configFile.getProperty("phase").equals("test")) {
 			if (configFile.getProperty("selector").equals("src"))

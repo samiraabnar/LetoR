@@ -1,6 +1,8 @@
 package ir.ac.ut.engine;
 
 
+import ir.ac.ut.config.Config;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.HashMap;
@@ -12,7 +14,6 @@ import org.apache.commons.io.FileUtils;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.core.SimpleAnalyzer;
 import org.apache.lucene.analysis.miscellaneous.PerFieldAnalyzerWrapper;
-import org.apache.lucene.analysis.standard.StandardAnalyzer;
 import org.apache.lucene.document.Document;
 import org.apache.lucene.document.Field;
 import org.apache.lucene.index.IndexWriter;
@@ -20,7 +21,6 @@ import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
 import org.iis.plagiarismdetector.core.lucene.MyAnalyzer;
-import org.iis.plagiarismdetector.core.sourceretrieval.SourceRetrievalConfig;
 
 /**
  *
@@ -48,7 +48,7 @@ public class FeaturedIndexer {
             Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_CURRENT);
             PerFieldAnalyzerWrapper prfWrapper = new PerFieldAnalyzerWrapper(analyzer, analyzerMap);
             IndexWriterConfig irc = new IndexWriterConfig(Version.LUCENE_CURRENT, prfWrapper);
-            this.writer = new IndexWriter(new SimpleFSDirectory(new File(SourceRetrievalConfig.getFeaturedIndexPath())), irc);
+            this.writer = new IndexWriter(new SimpleFSDirectory(new File(Config.getFeaturedIndexPath())), irc);
             
             IndexedDocument.fetchFeaturedDocuments(this);
             //fileReader(new File(configFile.getProperty("CORPUS_CON_PATH")));
@@ -95,12 +95,12 @@ public class FeaturedIndexer {
 
         private void preIndexerCleaning() {
         try {
-            File tmpIndex = new File(SourceRetrievalConfig.getFeaturedIndexPath());
+            File tmpIndex = new File(Config.getFeaturedIndexPath());
             if (tmpIndex.exists()) {
                 FileUtils.deleteDirectory(tmpIndex);
-                log.info("Deletting the existing index directory on: " + SourceRetrievalConfig.getFeaturedIndexPath());
-                FileUtils.forceMkdir(new File(SourceRetrievalConfig.getFeaturedIndexPath()));
-                log.info("Making index directory on: " + SourceRetrievalConfig.getFeaturedIndexPath());
+                log.info("Deletting the existing index directory on: " + Config.getFeaturedIndexPath());
+                FileUtils.forceMkdir(new File(Config.getFeaturedIndexPath()));
+                log.info("Making index directory on: " + Config.getFeaturedIndexPath());
             }
         } catch (IOException ex) {
             log.error(ex);

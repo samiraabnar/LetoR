@@ -28,8 +28,6 @@ import java.util.TreeSet;
 
 import javax.xml.parsers.ParserConfigurationException;
 
-import oracle.jrockit.jfr.parser.ParseException;
-
 import org.apache.lucene.document.Document;
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.queryparser.classic.QueryParser;
@@ -45,6 +43,8 @@ import org.apache.lucene.search.similarities.Similarity;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
 import org.xml.sax.SAXException;
+
+import com.sun.tools.example.debug.expr.ParseException;
 
 public class Retrieval extends Engine implements Serializable {
 
@@ -122,7 +122,6 @@ public class Retrieval extends Engine implements Serializable {
 
 	public static void generateCandidates() throws IOException {
 		Random random = new Random();
-		int k = 0;
 		Map<String, Integer> suspDocMap = null;
 		Map<String, Integer> srcDocMap = null;
 		Map<Integer, Set<Integer>> candidates = new TreeMap<Integer, Set<Integer>>();
@@ -181,8 +180,6 @@ public class Retrieval extends Engine implements Serializable {
 	public static void generateRankedCandidates() throws IOException,
 			ParseException,
 			org.apache.lucene.queryparser.classic.ParseException {
-		Random random = new Random();
-		int k = 0;
 		Map<String, Integer> suspDocMap = null;
 		Map<String, Integer> srcDocMap = null;
 		Map<Integer, Set<Integer>> candidates = new TreeMap<Integer, Set<Integer>>();
@@ -190,7 +187,6 @@ public class Retrieval extends Engine implements Serializable {
 		srcDocMap = Util.loadDocMap(getSrcMapPath());
 		AbstractList<Integer> suspDocValues = new ArrayList<Integer>(
 				suspDocMap.values());
-		ArrayList<Integer> srcDocValues = new ArrayList<Integer>(srcDocMap.values());
 		BufferedWriter bwriter = null;
 		BufferedReader breader = new BufferedReader(new FileReader(
 				Config.getJudgePath()));
