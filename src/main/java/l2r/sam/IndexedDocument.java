@@ -5,17 +5,24 @@ import ir.ac.ut.common.Util;
 import ir.ac.ut.config.Config;
 import ir.ac.ut.engine.FeaturedIndexer;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.StringReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -51,22 +58,22 @@ public class IndexedDocument {
 	public final static String FIELD_STOPWORDS = "Stopwords";
 	public final static String FIELD_STOPWORDS3Gram = "Stopwords3Gram";
 	public final static String FIELD_SENTENCES_LENGTH = "SentencesLength";
-	public final static String FIELD_PUNCTUATIONS = "Punstuation";
+	public final static String FIELD_PUNCTUATIONS = "Punctuation";
 	public final static String FIELD_UNIQUE_WORDS = "UniqueWords";
 	public final static String FIELD_DOCUMENT_LENGTH = "DocumentLength";
 	public final static String FIELD_DOCUMENT_LENGTH_UNIQUE = "DocumentLengthUnique";
 	private static final String SPLITTER = " ";
 
-	Map<String, String> features;
+	Map<String, String> features = new HashMap<String,String>();
 
 	public String get(String key) {
 		return features.get(key);
 	}
 
-	public IndexedDocument(String indexedId, String realId) {
+	public IndexedDocument(String indexedId, String realId) throws IOException {
 		features.put(FIELD_INDEXED_ID, indexedId);
 		features.put(FIELD_REAL_ID, realId);
-
+		
 	}
 
 	private List<String> documentOrderedTokens(String text) throws IOException
@@ -86,27 +93,7 @@ public class IndexedDocument {
 		return tokensList;
 	}
 
-	public static String getSortedStopWordsmGram(
-			List<String> documentStopwords, Integer m) {
-		String result = new String();
-
-		for (int i = 0; i < (documentStopwords.size() - m); i++) {
-			String ngram = "";
-			List<String> sortedStopwordmgram = new ArrayList<String>(
-					documentStopwords.subList(i, i + m));
-			Collections.sort(sortedStopwordmgram);
-			for (int j = 0; j < m; j++) {
-				ngram += " " + sortedStopwordmgram.get(j);
-			}
-			ngram = ngram.trim();
-
-			result += SPLITTER + ngram;
-		}
-
-		return result;
-	}
-
-	public static String getWordsInList(List<String> documentTerms,
+	private static String getWordsInList(List<String> documentTerms,
 			ArrayList<String> listedWords) {
 		String result = new String();
 
@@ -119,7 +106,7 @@ public class IndexedDocument {
 		return result;
 	}
 
-	public static String sortedNGram(List<String> documentNotStopwordTerms,
+	private static String sortedNGram(List<String> documentNotStopwordTerms,
 			int n) {
 		String result = new String();
 
@@ -129,7 +116,7 @@ public class IndexedDocument {
 					documentNotStopwordTerms.subList(i, i + n));
 			Collections.sort(sortedWordMGram);
 			for (int j = 0; j < n; j++) {
-				ngram += " " + sortedWordMGram.get(j);
+				ngram += "0" + sortedWordMGram.get(j);
 			}
 			ngram = ngram.trim();
 
@@ -154,7 +141,7 @@ public class IndexedDocument {
 
 	static WordNetUtil wordnetUtil = new WordNetUtil();
 
-	public static String getSynsets(List<String> documentTerms) {
+	private static String getSynsets(List<String> documentTerms) {
 
 		String synsets = new String();
 
@@ -169,17 +156,17 @@ public class IndexedDocument {
 		return synsets;
 	}
 
-	public static String getNamedEntities(String text) throws IOException {
+	private static String getNamedEntities(String text) throws IOException {
 		String namedEntitiesString = new String();
 
 		List<String> namedEntities = StanfordNamedEntityRecognizer.NER(text);
 		for (int i = 0; i < (namedEntities.size()); i++) {
-			namedEntitiesString += SPLITTER + namedEntities.get(i);
+			namedEntitiesString += SPLITTER + namedEntities.get(i).replaceAll("\\s+", "-");
 		}
 		return namedEntitiesString;
 	}
 
-	public static List<String> getOrderedPOS(String text) throws IOException {
+	 private List<String> getOrderedPOS(String text) throws IOException {
 
 		List<String> posList = new ArrayList<String>();
 		List<List<TaggedWord>> taggedWords = TextProcessor.tagText(text);
@@ -193,7 +180,7 @@ public class IndexedDocument {
 		return posList;
 	}
 
-	public static String getPOSkGram(List<String> posList, int k)
+	 private String getPOSkGram(List<String> posList, int k)
 			throws IOException {
 
 		String poskGrams = new String();
@@ -203,7 +190,7 @@ public class IndexedDocument {
 			List<String> poskGram = new ArrayList<String>(posList.subList(i, i
 					+ k));
 			for (int j = 0; j < k; j++) {
-				ngram += " " + poskGram.get(j);
+				ngram += "0" + poskGram.get(j);
 			}
 			ngram = ngram.trim();
 
@@ -213,6 +200,35 @@ public class IndexedDocument {
 		return poskGrams;
 	}
 
+	 static List <String> puncsMap = new ArrayList<String>();
+	 
+	public static void loadPuncMap() throws IOException
+	{
+		File puncFile = new File(Config.getPuncMapPath());
+		if(!puncFile.exists())
+		{
+			puncFile.createNewFile();
+		}
+		BufferedReader breader = new BufferedReader(new FileReader(puncFile));
+		String line = breader.readLine();
+		while (line != null) {
+			String[] split = line.split(" ");
+			puncsMap.add(split[0]);
+			line = breader.readLine();
+		}
+		breader.close();
+	}
+	
+	public static void savePuncMap() throws IOException
+	{
+		BufferedWriter bw = new BufferedWriter(new FileWriter(Config.getPuncMapPath()));
+		for(int i=0; i < puncsMap.size(); i++)
+		{
+			bw.write(puncsMap.get(i)+' '+i+"\n");
+		}
+		bw.close();
+	}
+	
 	private String getPunctuations(String text) throws IOException {
 		// TODO Auto-generated method stub
 		String result = new String();
@@ -221,7 +237,11 @@ public class IndexedDocument {
 		Matcher m = p.matcher(text);
 
 		while (m.find()) {
-			result += SPLITTER + (m.group());
+			String punc = m.group();
+			if(!puncsMap.contains(punc))
+				puncsMap.add(punc);
+				
+			result += SPLITTER + (puncsMap.indexOf(punc));
 		}
 		return result;
 	}

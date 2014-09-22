@@ -181,4 +181,9 @@ public class Config {
 				return configFile.getProperty("featuredSuspIndexPath");
 		}
 	}
+
+	public static String getPuncMapPath() {
+		// TODO Auto-generated method stub
+		return configFile.getProperty("puncsMap");
+	}
 }
