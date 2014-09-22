@@ -45,10 +45,18 @@ public class Engine {
 
 	public static Analyzer MyEnglishAnalyzer(Boolean steming,
 			Boolean stopwordRemooving) throws FileNotFoundException {
-		Set<String> stopword = Stoplistloader(configFile
-				.getProperty("EN_stopword"));
-		MyAnalyzer mAnalyzer = new MyAnalyzer(steming, stopword);
-		return mAnalyzer.getAnalyzer("EN");
+		if(stopwordRemooving)
+		{
+			Set<String> stopword = Stoplistloader(configFile
+					.getProperty("EN_stopword"));
+			MyAnalyzer mAnalyzer = new MyAnalyzer(steming, stopword);
+			return mAnalyzer.getAnalyzer("EN");
+		}
+		else
+		{
+			MyAnalyzer mAnalyzer = new MyAnalyzer(steming);
+			return mAnalyzer.getAnalyzer("EN");
+		}
 	}
 
 }

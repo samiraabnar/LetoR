@@ -158,4 +158,23 @@ public class Config {
 	public static String getSVMRankFolder() {
 		return configFile.getProperty("svmrankFolderPath");
 	}
+	
+	public String getFeaturedIndexPath()
+	{
+		if (configFile.getProperty("phase").equals("test")) {
+			if (configFile.getProperty("selector").equals("src"))
+				return configFile.getProperty("testFeaturedSrcIndexPath");
+			else if (configFile.getProperty("selector").equals("susp"))
+				return configFile.getProperty("testFeaturedSuspIndexPath");
+			else
+				return configFile.getProperty("testFeaturedSuspIndexPath");
+		} else {
+			if (configFile.getProperty("selector").equals("src"))
+				return configFile.getProperty("featuredSrcIndexPath");
+			else if (configFile.getProperty("selector").equals("susp"))
+				return configFile.getProperty("featuredSuspIndexPath");
+			else
+				return configFile.getProperty("featuredSuspIndexPath");
+		}
+	}
 }

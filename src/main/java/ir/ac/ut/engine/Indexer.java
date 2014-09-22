@@ -38,7 +38,7 @@ import org.xml.sax.SAXException;
  * @author Mostafa Dehghani
  *
  **/
-public class Indexer extends Engine {
+public class Indexer{
 	private static IndexWriter writer;
 	private static String eol = System.getProperty("line.separator");
 	private int i = 0;
@@ -49,9 +49,9 @@ public class Indexer extends Engine {
 
 		Analyzer analyzer;
 		if (Config.getLanguage().equals("EN"))
-			analyzer = MyEnglishAnalyzer(false, false);
+			analyzer = Engine.MyEnglishAnalyzer(false, false);
 		else if (Config.getLanguage().equals("FA"))
-			analyzer = MyPersianAnalyzer(false, false);
+			analyzer = Engine.MyPersianAnalyzer(false, false);
 		else {
 			analyzer = new SimpleAnalyzer(Version.LUCENE_47);
 		}
@@ -60,6 +60,7 @@ public class Indexer extends Engine {
 				analyzer);
 		writer = new IndexWriter(new SimpleFSDirectory(new File(
 				Config.getIndexPath())), irc);
+		System.out.println("Indexing: "+Config.getIndexPath()+" "+Config.getCorpusPath());
 		readCorpus_plainText();
 		writer.commit();
 		writer.close();
