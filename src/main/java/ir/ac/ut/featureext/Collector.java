@@ -334,10 +334,8 @@ public class Collector {
 	}
 
 	public static void computeScore() throws IOException {
-		float mu = (float) 1000;
 		QueryParser qParser;
 		Map<String, Integer> suspDocMap = Util.loadDocMap(getSuspMapPath());
-		Map<String, Integer> srcDocMap = Util.loadDocMap(getSrcMapPath());
 		Map<Integer, Set<Pair<Integer, Float>>> scoreMap = new HashMap<Integer, Set<Pair<Integer, Float>>>();
 		for (int sid : suspDocMap.values()) {
 			org.apache.lucene.document.Document document = suspIreader

@@ -1,5 +1,7 @@
 package ir.ac.ut.config;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
@@ -11,16 +13,18 @@ public class Config {
 	public static Properties configFile = new Properties();
 
 	static {
-		try {
-			ClassLoader loader = Thread.currentThread().getContextClassLoader();
-			InputStream stream = loader
-					.getResourceAsStream("config.properties");
-			configFile.load(stream);
+			  try {  	                        
+	                        File cFile = new File("config.properties");
+	                        System.out.println("Config File Path: " + cFile.getAbsolutePath());
+
+	                        InputStream stream = new FileInputStream(cFile);
+	                        configFile.load(stream);
 
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
+	
 
 	public static String getJudgePath() {
 		if (configFile.getProperty("phase").equals("test"))
