@@ -116,9 +116,9 @@ public class IndexedDocument {
 					documentNotStopwordTerms.subList(i, i + n));
 			Collections.sort(sortedWordMGram);
 			for (int j = 0; j < n; j++) {
-				ngram += "0" + sortedWordMGram.get(j);
+				ngram += " " + sortedWordMGram.get(j);
 			}
-			ngram = ngram.trim();
+			ngram = ngram.trim().replaceAll(" ","0");
 
 			result += SPLITTER + ngram;
 		}
@@ -161,9 +161,9 @@ public class IndexedDocument {
 
 		List<String> namedEntities = StanfordNamedEntityRecognizer.NER(text);
 		for (int i = 0; i < (namedEntities.size()); i++) {
-			namedEntitiesString += SPLITTER + namedEntities.get(i).replaceAll("\\s+", "-");
+			namedEntitiesString += namedEntities.get(i) + SPLITTER + namedEntities.get(i).replaceAll("\\s+", "0")+SPLITTER;
 		}
-		return namedEntitiesString;
+		return namedEntitiesString.trim();
 	}
 
 	 private List<String> getOrderedPOS(String text) throws IOException {
@@ -190,14 +190,16 @@ public class IndexedDocument {
 			List<String> poskGram = new ArrayList<String>(posList.subList(i, i
 					+ k));
 			for (int j = 0; j < k; j++) {
-				ngram += "0" + poskGram.get(j);
+                            if(!posMap.contains(poskGram.get(j).toLowerCase()))
+                                posMap.add(poskGram.get(j).toLowerCase());
+                            ngram += " " +  posMap.indexOf(poskGram.get(j).toLowerCase());
 			}
 			ngram = ngram.trim();
 
-			poskGrams += SPLITTER + ngram;
+			poskGrams += SPLITTER + ngram.trim().replaceAll(" ", "a");
 		}
 
-		return poskGrams;
+		return poskGrams.trim();
 	}
 
 	 static List <String> puncsMap = new ArrayList<String>();
@@ -357,5 +359,36 @@ public class IndexedDocument {
 			numOfWords  += SPLITTER + numberOfWords;
 		}
 			return numOfWords;
+	}
+        
+        
+        
+        static List <String> posMap = new ArrayList<String>();
+	 
+	public static void loadPOSMap() throws IOException
+	{
+		File posFile = new File(Config.getPOSMapPath());
+		if(!posFile.exists())
+		{
+			posFile.createNewFile();
+		}
+		BufferedReader breader = new BufferedReader(new FileReader(posFile));
+		String line = breader.readLine();
+		while (line != null) {
+			String[] split = line.split(" ");
+			puncsMap.add(split[0]);
+			line = breader.readLine();
+		}
+		breader.close();
+	}
+	
+	public static void savePOSMap() throws IOException
+	{
+		BufferedWriter bw = new BufferedWriter(new FileWriter(Config.getPOSMapPath()));
+		for(int i=0; i < posMap.size(); i++)
+		{
+			bw.write(posMap.get(i)+' '+i+"\n");
+		}
+		bw.close();
 	}
 }

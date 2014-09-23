@@ -186,4 +186,8 @@ public class Config {
 		// TODO Auto-generated method stub
 		return configFile.getProperty("puncsMap");
 	}
+
+    public static String getPOSMapPath() {
+		return configFile.getProperty("posMap");
+    }
 }

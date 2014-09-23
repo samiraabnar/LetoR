@@ -57,8 +57,7 @@ public class Retrieval extends Engine implements Serializable {
 			e.printStackTrace();
 		}
 	}
-	public static int SUSPCOUNT = 398;
-	public static int SRCCOUNT = 489;
+
 
 	public static ScoreDoc[] search(String query, String qId)
 			throws IOException, ParseException,

@@ -2,14 +2,11 @@ package ir.ac.ut.engine;
 
 import ir.ac.ut.config.Config;
 
-import java.io.BufferedWriter;
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.TreeMap;
 
 import javax.xml.parsers.ParserConfigurationException;
 
@@ -25,7 +22,6 @@ import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
-import org.iis.plagiarismdetector.core.MyDictionary;
 import org.iis.plagiarismdetector.core.lucene.MyAnalyzer;
 import org.xml.sax.SAXException;
 
@@ -48,15 +44,15 @@ public class FeaturedIndexer {
 		analyzerMap.put(IndexedDocument.FIELD_REAL_ID, new SimpleAnalyzer(
 				Version.LUCENE_CURRENT));
 		analyzerMap.put(IndexedDocument.FIELD_NAMED_ENTITIES, (new MyAnalyzer(
-				false)).MyNamedEntityAnalyzer());
+				false)).MyNgramAnalyzer());
 		analyzerMap.put(IndexedDocument.FIELD_SORTED_BIGRAMS, (new MyAnalyzer(
-				false)).MyNgramEntityAnalyzer());
+				false)).MyNgramAnalyzer());
 		analyzerMap.put(IndexedDocument.FIELD_SORTED_TRIGRAMS, (new MyAnalyzer(
-				false)).MyNgramEntityAnalyzer());
+				false)).MyNgramAnalyzer());
 		analyzerMap.put(IndexedDocument.FIELD_STOPWORDS3Gram, (new MyAnalyzer(
-				false)).MyNgramEntityAnalyzer());
+				false)).MyNgramAnalyzer());
 		analyzerMap.put(IndexedDocument.FIELD_POS3GRAM,
-				(new MyAnalyzer(false)).MyNgramEntityAnalyzer());
+				(new MyAnalyzer(false)).MyNgramAnalyzer());
 
 		Analyzer analyzer = ( new MyAnalyzer(false)).MyDefaultAnalyzer();
 		PerFieldAnalyzerWrapper prfWrapper = new PerFieldAnalyzerWrapper(
@@ -66,9 +62,11 @@ public class FeaturedIndexer {
 		this.writer = new IndexWriter(new SimpleFSDirectory(new File(
 				Config.getFeaturedIndexPath())), irc);
 		IndexedDocument.loadPuncMap();
+                IndexedDocument.loadPOSMap();
 		IndexedDocument.fetchFeaturedDocuments(this);
 		// fileReader(new File(configFile.getProperty("CORPUS_CON_PATH")));
 		IndexedDocument.savePuncMap();
+                IndexedDocument.savePOSMap();
 
 		this.writer.commit();
 		this.writer.close();
