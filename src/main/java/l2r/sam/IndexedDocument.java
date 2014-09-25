@@ -52,7 +52,7 @@ public class IndexedDocument {
 	public final static String FIELD_POSTAGS = "POSTags";
 	public final static String FIELD_POS3GRAM = "POS3GRAM";
 	public final static String FIELD_SYSNSETS = "Synsets";
-	public final static String FIELD_NAMED_ENTITIES = "NamedEntities";
+	//public final static String FIELD_NAMED_ENTITIES = "NamedEntities";
 	public final static String FIELD_MOST_FREQUENT_WORDS = "MostFrequentWords";
 	public final static String FIELD_LESS_FREQUENT_WORDS = "LessFrequentWords";
 	public final static String FIELD_STOPWORDS = "Stopwords";
@@ -286,7 +286,7 @@ public class IndexedDocument {
 		features.put(FIELD_DOCUMENT_LENGTH_UNIQUE,  indexInfo.getNumberofUniqTermsInDocument(indexedId, "TEXT").toString());
 		features.put(FIELD_LESS_FREQUENT_WORDS, getWordsInList(documentAllOrderedTerms, indexInfo.getDownTerms_DF("TEXT", 100)) );
 		features.put(FIELD_MOST_FREQUENT_WORDS, getWordsInList(documentAllOrderedTerms, indexInfo.getTopTerms_DF("TEXT", 100)));
-		features.put(FIELD_NAMED_ENTITIES, getNamedEntities(documentText));
+//		features.put(FIELD_NAMED_ENTITIES, getNamedEntities(documentText));
 		features.put(FIELD_POSTAGS, getPOSkGram(posList, 1) );
 		features.put(FIELD_POS3GRAM, getPOSkGram(posList, 3));
 		features.put(FIELD_PUNCTUATIONS, getPunctuations(documentText));
