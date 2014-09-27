@@ -4,7 +4,6 @@ package ir.ac.ut.common;
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-import static ir.ac.ut.featureext.Collector.stopWords;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -39,7 +38,7 @@ public class Document {
 
     String name;
     List<Integer> paragraphLength;
-    Map<Integer, Map<String, Double>> featuresMap;
+    Map<Integer, Map<String, Float>> featuresMap;
     int docLength = 0;
     String lang = "";
     int id;
@@ -95,7 +94,7 @@ public class Document {
 
     public Document(String content, String lang, int docId) throws Exception {
         int id = static_id;
-        featuresMap = new HashMap<Integer, Map<String, Double>>();
+        featuresMap = new HashMap<Integer, Map<String, Float>>();
         static_id++;
         this.lang = lang;
         this.docId = docId;
@@ -137,11 +136,11 @@ public class Document {
         this.orderedTerms = orderedTerms;
     }
 
-    public void addFeature(int key, Map<String, Double> value) {
+    public void addFeature(int key, Map<String, Float> value) {
         featuresMap.put(key, value);
     }
 
-    public Map<Integer, Map<String, Double>> getFeaturesMap() {
+    public Map<Integer, Map<String, Float>> getFeaturesMap() {
         return featuresMap;
     }
 
@@ -153,7 +152,7 @@ public class Document {
         this.docId = docId;
     }
 
-    public void setFeaturesMap(Map<Integer, Map<String, Double>> featuresMap) {
+    public void setFeaturesMap(Map<Integer, Map<String, Float>> featuresMap) {
         this.featuresMap = featuresMap;
     }
 

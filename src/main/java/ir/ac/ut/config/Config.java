@@ -5,6 +5,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
+import static org.iis.plagiarismdetector.core.sourceretrieval.SourceRetrievalConfig.configFile;
 
 /**
  * Created by Mahsa on 5/22/14.
@@ -190,4 +191,26 @@ public class Config {
     public static String getPOSMapPath() {
 		return configFile.getProperty("posMap");
     }
+
+     public static String getSrcFeaturedIndexPath() {
+        if (configFile.getProperty("phase").equals("test")) {
+            return configFile.getProperty("testFeaturedSrcIndexPath");
+        }
+        else
+        {
+              return configFile.getProperty("featuredSrcIndexPath");          
+        }
+    }    
+
+    public static String getSuspFeaturedIndexPath() {
+ if (configFile.getProperty("phase").equals("test")) {
+            return configFile.getProperty("testFeaturedSuspIndexPath");
+        }
+        else
+        {
+              return configFile.getProperty("featuredSuspIndexPath");          
+        }    }
+     
+     
+     
 }

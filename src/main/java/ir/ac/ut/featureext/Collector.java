@@ -172,11 +172,11 @@ public class Collector {
 		}
 	}
 
-	public static Double computeKL(Map<String, Double> susp,
-			Map<String, Double> src) {
+	public static Float computeKL(Map<String, Float> susp,
+			Map<String, Float> src) {
 		HashSet<String> intersect = new HashSet<String>(susp.keySet());
 		intersect.retainAll(src.keySet());
-		double klDiv = 0;
+		Double klDiv = 0D;
 		double[] p1 = new double[intersect.size()];
 		double[] p2 = new double[intersect.size()];
 		Iterator<String> it = intersect.iterator();
@@ -195,23 +195,23 @@ public class Collector {
 			}
 			klDiv += p1[u] * (Math.log(p1[u] / p2[u]) / log2);
 		}
-		return klDiv;
+		return klDiv.floatValue();
 	}
 
-	public static Double computeDiceSimilarity(Set<String> susp, Set<String> src) {
+	public static Float computeDiceSimilarity(Set<String> susp, Set<String> src) {
 		HashSet<String> intersect = new HashSet<String>(susp);
 		intersect.retainAll(src);
-		double intersectSize = intersect.size();
-		double unionSize = src.size() + susp.size() - intersectSize;
+		float intersectSize = intersect.size();
+		float unionSize = src.size() + susp.size() - intersectSize;
 		return (intersectSize / unionSize);
 	}
 
-	public static Double computeCosinSimilarity(Map<String, Double> susp,
-			Map<String, Double> src) {
+	public static Float computeCosinSimilarity(Map<String, Float> susp,
+			Map<String, Float> src) {
 		HashSet<String> intersect = new HashSet<String>(susp.keySet());
 		intersect.retainAll(src.keySet());
 
-		Double simScore = 0D;
+		Float simScore = 0F;
 		for (String term : intersect) {
 			simScore += susp.get(term) * src.get(term);
 		}
@@ -237,14 +237,14 @@ public class Collector {
 		}
 	}
 
-	public static Map<String, Double> getStopWordsDist(Document doc) {
-		Map<String, Double> result = new HashMap<String, Double>();
+	public static Map<String, Float> getStopWordsDist(Document doc) {
+		Map<String, Float> result = new HashMap<String, Float>();
 		for (String sw : stopWords) {
-			result.put(sw, 0.0);
+			result.put(sw, 0.0F);
 		}
 		for (String word : doc.getOrderedTerms()) {
 			if (stopWords.contains(word)) {
-				result.put(word, result.get(word) + 1.0);
+				result.put(word, result.get(word) + 1.0F);
 			}
 		}
 
@@ -255,11 +255,11 @@ public class Collector {
 		return result;
 	}
 
-	public static Map<String, Double> numOfSentencesInPargraph(Document document)
+	public static Map<String, Float> numOfSentencesInPargraph(Document document)
 			throws IOException {
-		Map<String, Double> map = new HashMap<String, Double>();
+		Map<String, Float> map = new HashMap<String, Float>();
 		for (int i = 1; i <= 50; i++) {
-			map.put(String.valueOf(i), 0.0);
+			map.put(String.valueOf(i), 0.0F);
 		}
 		for (int d : document.getParagraphLength()) {
 			int temp = d;
@@ -269,7 +269,7 @@ public class Collector {
 			if (temp == 0) {
 				continue;
 			}
-			map.put(String.valueOf(temp), map.get(String.valueOf(temp)) + 1.0
+			map.put(String.valueOf(temp), map.get(String.valueOf(temp)) + 1.0F
 					);
 		}
 		
@@ -280,29 +280,29 @@ public class Collector {
 		return map;
 	}
 
-	public static HashMap<String, Double> getAllTermsDist(Document document) {
-		HashMap<String, Double> numOfwords = new HashMap<String, Double>();
+	public static HashMap<String, Float> getAllTermsDist(Document document) {
+		HashMap<String, Float> numOfwords = new HashMap<String, Float>();
 		for (String word : document.getOrderedTerms()) {
 			if (numOfwords.keySet().contains(word)) {
 				numOfwords.put(word, numOfwords.get(word) + 1);
 			} else {
-				numOfwords.put(word, 1.0);
+				numOfwords.put(word, 1.0F);
 			}
 		}
 
-		HashMap<String, Double> frequencyOfWordsLength = new HashMap<String, Double>();
+		HashMap<String, Float> frequencyOfWordsLength = new HashMap<String, Float>();
 		for (String keyValue : numOfwords.keySet()) {
-			double numOfword = numOfwords.get(keyValue);
-			double frequency = numOfword / document.getOrderedTerms().size();
+			float numOfword = numOfwords.get(keyValue);
+			float frequency = numOfword / document.getOrderedTerms().size();
 			frequencyOfWordsLength.put(keyValue, frequency);
 		}
 		return frequencyOfWordsLength;
 	}
 
-	public static HashMap<String, Double> numOfWordsInSentence(Document document) {
+	public static HashMap<String, Float> numOfWordsInSentence(Document document) {
 		HashMap<String, Integer> numOfWords = new HashMap<String, Integer>();
-		HashMap<String, Double> frequencyOfWordNumber = new HashMap<String, Double>();
-		double totalNumOfSentences = document.getSentences().size();
+		HashMap<String, Float> frequencyOfWordNumber = new HashMap<String, Float>();
+		float totalNumOfSentences = document.getSentences().size();
 
 		for (int i = 0; i < 33; i++) {
 			numOfWords.put(String.valueOf(i), 0);
@@ -324,8 +324,8 @@ public class Collector {
 			// numOfWords.put(numberOfWordOfSentence, 1);
 		}
 		for (String keyValue : numOfWords.keySet()) {
-			double numOfWord = numOfWords.get(keyValue);
-			double frequency = numOfWord / totalNumOfSentences;
+			float numOfWord = numOfWords.get(keyValue);
+			float frequency = numOfWord / totalNumOfSentences;
 			frequencyOfWordNumber.put(keyValue, frequency);
 		}
 		// frequencyOfWordNumber.put("32",sum/totalNumOfSentences);
@@ -446,8 +446,8 @@ public class Collector {
 		}
 	}
 
-	public static Map<String, Double> nGramOnAllTerms(Document document, int n) {
-		Map<String, Double> result = new HashMap<String, Double>();
+	public static Map<String, Float> nGramOnAllTerms(Document document, int n) {
+		Map<String, Float> result = new HashMap<String, Float>();
 		for (int i = 0; i < document.getOrderedTerms().size(); i++) {
 			String ngram = "";
 			List<String> ngramParts = new ArrayList(document.getOrderedTerms()
@@ -456,9 +456,9 @@ public class Collector {
 				ngram += ngramParts.get(j);
 			}
 			if (!result.containsKey(ngram)) {
-				result.put(ngram, 0.0);
+				result.put(ngram, 0.0F);
 			}
-			result.put(ngram, result.get(ngram) + 1.0);
+			result.put(ngram, result.get(ngram) + 1.0F);
 		}
 
 		for (String key : result.keySet()) {
@@ -467,9 +467,9 @@ public class Collector {
 		return result;
 	}
 
-	public static Map<String, Double> getSortedStopWordsmGram(
+	public static Map<String, Float> getSortedStopWordsmGram(
 			Document document, Integer m) {
-		Map<String, Double> result = new HashMap<String, Double>();
+		Map<String, Float> result = new HashMap<String, Float>();
 		List<String> stopwords = new ArrayList<String>();
 		for (int i = 0; i < document.getOrderedTerms().size(); i++) {
 			if (stopWords.contains(document.getOrderedTerms().get(i).toLowerCase())) {
@@ -488,9 +488,9 @@ public class Collector {
 			ngram = ngram.trim();
 
 			if (!result.containsKey(ngram)) {
-				result.put(ngram, 0.0);
+				result.put(ngram, 0.0F);
 			}
-			result.put(ngram, result.get(ngram) + 1.0);
+			result.put(ngram, result.get(ngram) + 1.0F);
 		}
 
 		for (String stopwordmgram : result.keySet()) {
@@ -500,15 +500,15 @@ public class Collector {
 		return result;
 	}
 
-	public static Map<String, Double> getRelativeFrequencyOfMostFrequentWords(
+	public static Map<String, Float> getRelativeFrequencyOfMostFrequentWords(
 			Document doc, ArrayList<String> frequentwords) {
-		Map<String, Double> result = new HashMap<String, Double>();
+		Map<String, Float> result = new HashMap<String, Float>();
 		for (String sw : frequentwords) {
-			result.put(sw, 0.0);
+			result.put(sw, 0.0F);
 		}
 		for (String word : doc.getOrderedTerms()) {
 			if (frequentwords.contains(word)) {
-				result.put(word, result.get(word) + 1.0);
+				result.put(word, result.get(word) + 1.0F);
 			}
 		}
 
@@ -519,8 +519,8 @@ public class Collector {
 		return result;
 	}
 
-	public static Map<String, Double> sortedNGram(Document document, int n) {
-		Map<String, Double> result = new HashMap<String, Double>();
+	public static Map<String, Float> sortedNGram(Document document, int n) {
+		Map<String, Float> result = new HashMap<String, Float>();
 		List<String> words = new ArrayList<String>();
 
 		for (int i = 0; i < document.getOrderedTerms().size(); i++) {
@@ -539,9 +539,9 @@ public class Collector {
 			}
 			ngram = ngram.trim();
 			if (!result.containsKey(ngram)) {
-				result.put(ngram, 0.0);
+				result.put(ngram, 0.0F);
 			}
-			result.put(ngram, result.get(ngram) + 1.0);
+			result.put(ngram, result.get(ngram) + 1.0F);
 		}
 
 		for (String ngram : result.keySet()) {
@@ -553,23 +553,23 @@ public class Collector {
 
 	static WordNetUtil wordnetUtil = new WordNetUtil();
 
-	public static Map<String, Double> getSynsetsDist(
-			Map<String, Double> documentTermDist) {
+	public static Map<String, Float> getSynsetsDist(
+			Map<String, Float> documentTermDist) {
 
-		Map<String, Double> synsetDist = new HashMap<String, Double>();
+		Map<String, Float> synsetDist = new HashMap<String, Float>();
 
 		for (String word : documentTermDist.keySet()) {
 			Set<Long> wordSynsets = wordnetUtil.getAllSynsets(word);
 			for (Long synsetId : wordSynsets) {
 				if (!synsetDist.containsKey(synsetId.toString())) {
-					synsetDist.put(synsetId.toString(), 0D);
+					synsetDist.put(synsetId.toString(), 0F);
 				}
 
 				synsetDist
 						.put(synsetId.toString(),
 								synsetDist.get(synsetId.toString())
 										+ (documentTermDist.get(word)
-												.doubleValue() / wordSynsets
+												.floatValue() / wordSynsets
 												.size()));
 			}
 		}
@@ -579,19 +579,19 @@ public class Collector {
 
 //	private static Annotator ann = new Annotator(0.0);
 
-	public static Map<String, Double> getNamedEntitiesDist(Document doc,
+	public static Map<String, Float> getNamedEntitiesDist(Document doc,
 			IndexReader ireader) throws IOException {
-		Map<String, Double> namedEntityDist = new HashMap<String, Double>();
+		Map<String, Float> namedEntityDist = new HashMap<String, Float>();
 
 		List<String> namedEntities = StanfordNamedEntityRecognizer.NER(ireader.document(
 				doc.getDocId()).get("TEXT"));
 		for (int i = 0; i < (namedEntities.size()); i++) {
 
 			if (!namedEntityDist.containsKey(namedEntities.get(i))) {
-				namedEntityDist.put(namedEntities.get(i), 0.0);
+				namedEntityDist.put(namedEntities.get(i), 0.0F);
 			}
 			namedEntityDist.put(namedEntities.get(i),
-					namedEntityDist.get(namedEntities.get(i)) + 1.0);
+					namedEntityDist.get(namedEntities.get(i)) + 1.0F);
 		}
 
 		for (String ngram : namedEntityDist.keySet()) {
@@ -601,9 +601,9 @@ public class Collector {
 		return namedEntityDist;
 	}
 
-//	public static Map<String, Double> getEntitiesDist(Document doc,
+//	public static Map<String, Float> getEntitiesDist(Document doc,
 //			IndexReader ireader) throws IOException {
-//		Map<String, Double> entityDist = new HashMap<String, Double>();
+//		Map<String, Float> entityDist = new HashMap<String, Float>();
 //
 //		List<String> entities  = ann.getNamedEntities(ireader.document(
 //				doc.getDocId()).get("TEXT"));
@@ -639,10 +639,10 @@ public class Collector {
 		return posList;
 	}
 
-	public static Map<String, Double> getPOSkGram(List<String> posList, int k)
+	public static Map<String, Float> getPOSkGram(List<String> posList, int k)
 			throws IOException {
 
-		Map<String, Double> poskGramDist = new HashMap<String, Double>();
+		Map<String, Float> poskGramDist = new HashMap<String, Float>();
 		for (int i = 0; i < (posList.size() - k); i++) {
 			String ngram = "";
 			List<String> poskGram = new ArrayList(posList.subList(i, i + k));
@@ -652,9 +652,9 @@ public class Collector {
 			ngram = ngram.trim();
 
 			if (!poskGramDist.containsKey(ngram)) {
-				poskGramDist.put(ngram, 0.0);
+				poskGramDist.put(ngram, 0.0F);
 			}
-			poskGramDist.put(ngram, poskGramDist.get(ngram) + 1.0);
+			poskGramDist.put(ngram, poskGramDist.get(ngram) + 1.0F);
 		}
 
 		for (String ngram : poskGramDist.keySet()) {
@@ -664,9 +664,9 @@ public class Collector {
 		return poskGramDist;
 	}
 
-	public static Map<String, Double> getPunctuationDist(Document document,IndexReader ireader) throws IOException {
+	public static Map<String, Float> getPunctuationDist(Document document,IndexReader ireader) throws IOException {
 		// TODO Auto-generated method stub
-		Map<String, Double> result = new HashMap<String, Double>();
+		Map<String, Float> result = new HashMap<String, Float>();
 		List<String> puncs = new ArrayList<String>();
 		String text = ireader.document(document.getDocId()).get("TEXT");
 		
@@ -680,9 +680,9 @@ public class Collector {
 		for (int i = 0; i < puncs.size() ; i++) {
 			
 			if (!result.containsKey(puncs.get(i))) {
-				result.put(puncs.get(i), 0.0);
+				result.put(puncs.get(i), 0.0F);
 			}
-			result.put(puncs.get(i), result.get(puncs.get(i)) + 1.0);
+			result.put(puncs.get(i), result.get(puncs.get(i)) + 1.0F);
 		}
 
 		for (String punc : result.keySet()) {

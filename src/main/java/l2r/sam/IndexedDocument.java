@@ -22,7 +22,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -39,8 +38,12 @@ import org.iis.ut.stanford_ner.StanfordNamedEntityRecognizer;
 import edu.stanford.nlp.ling.HasWord;
 import edu.stanford.nlp.ling.TaggedWord;
 import edu.stanford.nlp.process.DocumentPreprocessor;
+import ir.ac.ut.engine.Engine;
 
 public class IndexedDocument {
+
+        static IndexInfo srcIndexInfo = new IndexInfo(Util.srcIreader);
+        static IndexInfo suspIndexInfo = new IndexInfo(Util.suspIreader);
 
 	public final static String FIELD_REAL_ID = "RealID";
 	public final static String FIELD_INDEXED_ID = "IndexedID";
@@ -52,7 +55,7 @@ public class IndexedDocument {
 	public final static String FIELD_POSTAGS = "POSTags";
 	public final static String FIELD_POS3GRAM = "POS3GRAM";
 	public final static String FIELD_SYSNSETS = "Synsets";
-	//public final static String FIELD_NAMED_ENTITIES = "NamedEntities";
+	public final static String FIELD_NAMED_ENTITIES = "NamedEntities";
 	public final static String FIELD_MOST_FREQUENT_WORDS = "MostFrequentWords";
 	public final static String FIELD_LESS_FREQUENT_WORDS = "LessFrequentWords";
 	public final static String FIELD_STOPWORDS = "Stopwords";
@@ -79,7 +82,7 @@ public class IndexedDocument {
 	private List<String> documentOrderedTokens(String text) throws IOException
 	{
 	
-		Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_CURRENT);
+		Analyzer analyzer =  Engine.MyEnglishAnalyzer(false,false);
 		TokenStream stream = analyzer.tokenStream("TEXT", new StringReader(
 				text));
 		stream.reset();
@@ -96,14 +99,14 @@ public class IndexedDocument {
 	private static String getWordsInList(List<String> documentTerms,
 			ArrayList<String> listedWords) {
 		String result = new String();
-
+                
 		for (String word : documentTerms) {
-			if (listedWords.contains(word)) {
+			if (listedWords.contains(word.toLowerCase())) {
 				result += SPLITTER + word;
 			}
 		}
 
-		return result;
+		return result.trim();
 	}
 
 	private static String sortedNGram(List<String> documentNotStopwordTerms,
@@ -161,7 +164,7 @@ public class IndexedDocument {
 
 		List<String> namedEntities = StanfordNamedEntityRecognizer.NER(text);
 		for (int i = 0; i < (namedEntities.size()); i++) {
-			namedEntitiesString += namedEntities.get(i) + SPLITTER + namedEntities.get(i).replaceAll("\\s+", "0")+SPLITTER;
+			namedEntitiesString += namedEntities.get(i).replaceAll("\\s+", "0")+SPLITTER;
 		}
 		return namedEntitiesString.trim();
 	}
@@ -284,9 +287,9 @@ public class IndexedDocument {
 		features.put(FIELD_CONTENTWORDS,sortedNGram(documentNonStopwordTerms, 1));
 		features.put(FIELD_DOCUMENT_LENGTH, indexInfo.getDocumentLength(indexedId, "TEXT").toString());
 		features.put(FIELD_DOCUMENT_LENGTH_UNIQUE,  indexInfo.getNumberofUniqTermsInDocument(indexedId, "TEXT").toString());
-		features.put(FIELD_LESS_FREQUENT_WORDS, getWordsInList(documentAllOrderedTerms, indexInfo.getDownTerms_DF("TEXT", 100)) );
-		features.put(FIELD_MOST_FREQUENT_WORDS, getWordsInList(documentAllOrderedTerms, indexInfo.getTopTerms_DF("TEXT", 100)));
-//		features.put(FIELD_NAMED_ENTITIES, getNamedEntities(documentText));
+		features.put(FIELD_LESS_FREQUENT_WORDS, getWordsInList(documentAllOrderedTerms, srcIndexInfo.getDownTerms_DF("TEXT", 100)) );
+		features.put(FIELD_MOST_FREQUENT_WORDS, getWordsInList(documentAllOrderedTerms, srcIndexInfo.getTopTerms_DF("TEXT", 100)));
+		features.put(FIELD_NAMED_ENTITIES, getNamedEntities(documentText));
 		features.put(FIELD_POSTAGS, getPOSkGram(posList, 1) );
 		features.put(FIELD_POS3GRAM, getPOSkGram(posList, 3));
 		features.put(FIELD_PUNCTUATIONS, getPunctuations(documentText));
@@ -356,7 +359,7 @@ public class IndexedDocument {
 		
 		for (Sentence sentence : sentences) {
 			int numberOfWords = sentence.getWords().size();
-			numOfWords  += SPLITTER + numberOfWords;
+			numOfWords  += SPLITTER + (int)(numberOfWords / 5);
 		}
 			return numOfWords;
 	}

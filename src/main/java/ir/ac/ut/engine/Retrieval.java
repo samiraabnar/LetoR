@@ -44,7 +44,6 @@ import org.apache.lucene.store.SimpleFSDirectory;
 import org.apache.lucene.util.Version;
 import org.xml.sax.SAXException;
 
-import com.sun.tools.example.debug.expr.ParseException;
 
 public class Retrieval extends Engine implements Serializable {
 
@@ -60,7 +59,7 @@ public class Retrieval extends Engine implements Serializable {
 
 
 	public static ScoreDoc[] search(String query, String qId)
-			throws IOException, ParseException,
+			throws IOException,
 			org.apache.lucene.queryparser.classic.ParseException {
 		float mu = (float) 1000;
 		QueryParser qParser;
@@ -124,8 +123,8 @@ public class Retrieval extends Engine implements Serializable {
 		Map<String, Integer> suspDocMap = null;
 		Map<String, Integer> srcDocMap = null;
 		Map<Integer, Set<Integer>> candidates = new TreeMap<Integer, Set<Integer>>();
-		suspDocMap = Util.loadDocMap(getSuspMapPath());
-		srcDocMap = Util.loadDocMap(getSrcMapPath());
+		suspDocMap = Util.loadDocMapFromIndex(Config.getSuspFeaturedIndexPath());
+		srcDocMap = Util.loadDocMapFromIndex(Config.getSrcFeaturedIndexPath());
 		AbstractList<Integer> suspDocValues = new ArrayList<Integer>(
 				suspDocMap.values());
 		ArrayList<Integer> srcDocValues = new ArrayList<Integer>(srcDocMap.values());
@@ -135,14 +134,14 @@ public class Retrieval extends Engine implements Serializable {
 		String line = breader.readLine();
 		while (line != null) {
 			String[] split = line.split(" ");
-			int suspNum = suspDocMap.get(split[0].trim());
+			int suspNum = suspDocMap.get(split[0].trim().replaceAll(".txt", ""));
 			Set<Integer> set;
 			if (candidates.containsKey(suspNum))
 				set = candidates.get(suspNum);
 			else
 				set = new TreeSet<Integer>();
 
-			set.add(srcDocMap.get(split[2].trim()));
+			set.add(srcDocMap.get(split[2].trim().replaceAll(".txt", "")));
 			candidates.put(suspNum, set);
 			line = breader.readLine();
 		}
@@ -152,7 +151,7 @@ public class Retrieval extends Engine implements Serializable {
 				set = candidates.get(value);
 			else
 				set = new TreeSet<Integer>();
-			while (set.size() != 30)
+			while (set.size() != 100)
 				set.add(srcDocValues.get(random.nextInt(srcDocValues.size() - 1)));
 			candidates.put(value, set);
 		}
@@ -177,13 +176,13 @@ public class Retrieval extends Engine implements Serializable {
 	}
 
 	public static void generateRankedCandidates() throws IOException,
-			ParseException,
+			
 			org.apache.lucene.queryparser.classic.ParseException {
 		Map<String, Integer> suspDocMap = null;
 		Map<String, Integer> srcDocMap = null;
 		Map<Integer, Set<Integer>> candidates = new TreeMap<Integer, Set<Integer>>();
-		suspDocMap = Util.loadDocMap(getSuspMapPath());
-		srcDocMap = Util.loadDocMap(getSrcMapPath());
+		suspDocMap = Util.loadDocMapFromIndex(Config.getSuspFeaturedIndexPath());
+		srcDocMap = Util.loadDocMapFromIndex(Config.getSrcFeaturedIndexPath());
 		AbstractList<Integer> suspDocValues = new ArrayList<Integer>(
 				suspDocMap.values());
 		BufferedWriter bwriter = null;
@@ -241,8 +240,10 @@ public class Retrieval extends Engine implements Serializable {
 	}
 
 	public static void main(String[] args) throws ParserConfigurationException,
-			SAXException, SQLException, IOException, ParseException,
+			SAXException, SQLException, IOException,
 			org.apache.lucene.queryparser.classic.ParseException {
-		generateRankedCandidates();
+		generateCandidates();
 	}
+	
+	
 }

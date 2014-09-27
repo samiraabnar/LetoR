@@ -3,6 +3,7 @@ package ir.ac.ut.common;
 import static ir.ac.ut.config.Config.getSrcMapPath;
 import static ir.ac.ut.config.Config.getSuspMapPath;
 import ir.ac.ut.config.Config;
+import static ir.ac.ut.config.Config.getSrcIndexPath;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -11,14 +12,17 @@ import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.io.OutputStreamWriter;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeMap;
+import l2r.sam.IndexedDocument;
 
 import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.store.SimpleFSDirectory;
+import org.iis.plagiarismdetector.core.lucene.IndexInfo;
 
 /**
  * Created by Mahsa on 6/27/14.
@@ -146,5 +150,18 @@ public class Util {
 		breader.close();
 		return map;
 	}
+
+    public static Map<String, Integer> loadDocMapFromIndex(String indexPath) throws IOException {
+        IndexInfo iinfo = new IndexInfo(IndexReader.open(new SimpleFSDirectory(new File(
+					indexPath))));
+        
+        Map<String,Integer> idMap = new HashMap<String, Integer>();
+        for(int i=0; i < iinfo.getIndexReader().numDocs(); i++)
+        {
+            idMap.put(iinfo.getIndexReader().document(i).get(IndexedDocument.FIELD_REAL_ID),i);
+        }
+        
+        return idMap;
+    }
 
 }

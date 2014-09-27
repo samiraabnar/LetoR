@@ -118,9 +118,9 @@ public class FeaturedIndexer {
 				indexedDocument.get(IndexedDocument.FIELD_LESS_FREQUENT_WORDS),
 				Field.Store.YES, Field.Index.ANALYZED,
 				Field.TermVector.WITH_POSITIONS));
-	//	doc.add(new Field(IndexedDocument.FIELD_NAMED_ENTITIES, indexedDocument
-	//			.get(IndexedDocument.FIELD_NAMED_ENTITIES), Field.Store.YES,
-	//			Field.Index.ANALYZED, Field.TermVector.WITH_POSITIONS));
+		doc.add(new Field(IndexedDocument.FIELD_NAMED_ENTITIES, indexedDocument
+				.get(IndexedDocument.FIELD_NAMED_ENTITIES), Field.Store.YES,
+				Field.Index.ANALYZED, Field.TermVector.WITH_POSITIONS));
 		doc.add(new Field(IndexedDocument.FIELD_STOPWORDS, indexedDocument
 				.get(IndexedDocument.FIELD_STOPWORDS), Field.Store.YES,
 				Field.Index.ANALYZED, Field.TermVector.WITH_POSITIONS));
