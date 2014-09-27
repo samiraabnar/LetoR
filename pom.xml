@@ -20,8 +20,7 @@
                 <archive>
                     <manifest>
                         <mainClass>
-                            ir.ac.ut.engine.FeaturedIndexer
-                            <!--l2r.sam.PlagiarizedSourceRanker-->
+                            l2r.sam.PlagiarizedSourceRanker
                         </mainClass>
                     </manifest>
                 </archive>
