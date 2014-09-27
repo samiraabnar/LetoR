@@ -64,7 +64,7 @@ public class PlagiarizedSourceRanker {
     IndexInfo suspFeaturedIndex;
     IndexInfo srcFeaturedIndex;
    
-        final private Integer CLASSIFIER_FEATURES_PAIRED_ALLTERMS = 1;
+    final private Integer CLASSIFIER_FEATURES_PAIRED_ALLTERMS = 1;
     final private Integer CLASSIFIER_FEATURES_PAIRED_BIGRAMS = 2;
     final private Integer CLASSIFIER_FEATURES_PAIRED_CONTENTWORDS = 3;
     final private Integer CLASSIFIER_FEATURES_PAIRED_LESSFREQUENTWORDS = 4;
