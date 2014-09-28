@@ -80,8 +80,9 @@ public class PlagiarizedSourceRanker {
     final private Integer CLASSIFIER_FEATURES_QUERYINDEPENDENT_SRCLENGTH = 14;
     final private Integer CLASSIFIER_FEATURES_QUERYINDEPENDENT_UNIQUESRCLENGTH = 15;
     final private Integer CLASSIFIER_FEATURES_QUERYINDEPENDENT_SRCUNIQUETERMSCOUNT = 16;
-    final private Integer CLASSIFIER_FEATURES_PAIRED_STOPWORDS = 17;
-        final private Integer CLASSIFIER_FEATURES_PAIRED_NAMEDENTITIES = 8;
+   final private Integer CLASSIFIER_FEATURES_PAIRED_NAMEDENTITIES = 17;
+       final private Integer CLASSIFIER_FEATURES_PAIRED_STOPWORDS = 18;
+
 
     private static final int DOCFEATURE_CONTENTWORDS = 0;
     private static final int DOCFEATURE_LESSFREQUENTWORDS = 1;
@@ -122,9 +123,9 @@ public class PlagiarizedSourceRanker {
 		try {
 			psr = new PlagiarizedSourceRanker();
 		
-           psr.makeFeaturesReady(Util.loadCandidatesMap(Config
-                    .getCandidatesMapPath()));
-	/*psr.makeFeaturesReady(Util.loadCandidatesMapTrecFormat(Config.getCandidatesMapPath()));*/
+         /*  psr.makeFeaturesReady(Util.loadCandidatesMap(Config
+                    .getCandidatesMapPath()));*/
+	psr.makeFeaturesReady(Util.loadCandidatesMapTrecFormat(Config.getCandidatesMapPath()));
         } catch (IOException e) {
             e.printStackTrace();
         }
