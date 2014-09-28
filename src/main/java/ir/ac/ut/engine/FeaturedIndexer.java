@@ -43,8 +43,8 @@ public class FeaturedIndexer {
 		preIndexerCleaning();
 		analyzerMap.put(IndexedDocument.FIELD_REAL_ID, new SimpleAnalyzer(
 				Version.LUCENE_CURRENT));
-	//	analyzerMap.put(IndexedDocument.FIELD_NAMED_ENTITIES, (new MyAnalyzer(
-	//			false)).MyNgramAnalyzer());
+		analyzerMap.put(IndexedDocument.FIELD_NAMED_ENTITIES, (new MyAnalyzer(
+				false)).MyNgramAnalyzer());
 		analyzerMap.put(IndexedDocument.FIELD_SORTED_BIGRAMS, (new MyAnalyzer(
 				false)).MyNgramAnalyzer());
 		analyzerMap.put(IndexedDocument.FIELD_SORTED_TRIGRAMS, (new MyAnalyzer(
