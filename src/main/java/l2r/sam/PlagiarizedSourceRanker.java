@@ -123,9 +123,9 @@ public class PlagiarizedSourceRanker {
 		try {
 			psr = new PlagiarizedSourceRanker();
 		
-        psr.makeFeaturesReady(Util.loadCandidatesMap(Config
-                    .getCandidatesMapPath()));
-	//psr.makeFeaturesReady(Util.loadCandidatesMapTrecFormat(Config.getCandidatesMapPath()));
+//        psr.makeFeaturesReady(Util.loadCandidatesMap(Config
+//                    .getCandidatesMapPath()));
+	psr.makeFeaturesReady(Util.loadCandidatesMapTrecFormat(Config.getCandidatesMapPath()));
         } catch (IOException e) {
             e.printStackTrace();
         }
