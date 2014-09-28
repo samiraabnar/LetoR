@@ -103,7 +103,7 @@ public class Analyzer {
 			if (pairs.containsKey(i) && pairs.get(i).contains(j)) {
 				tag = "1";
 			}
-			bout.write(tag + " " + bline + "\n");
+			bout.write(tag + " " + bline + " "+suspDocMap.get(i)+ " " + srcDocMap.get(j)+"\n");
 			bline = bin.readLine();
 		}
 		bout.close();

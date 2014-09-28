@@ -469,7 +469,7 @@ public class PlagiarizedSourceRanker {
     public void makeFeaturesReady(Map<Integer, Set<Integer>> candidates) throws IOException, ParseException{
     
     	 
-  //  	TreeMap<Integer, List<Pair<TreeMap<Integer, Float>, Integer>>> features =	extractLanguageModelBasedFeatures(candidates);
+    	TreeMap<Integer, List<Pair<TreeMap<Integer, Float>, Integer>>> features =	extractLanguageModelBasedFeatures(candidates);
         //writeFeatures(features);
     	Analyzer.makeFeaturesReady();
     }
