@@ -73,10 +73,9 @@ public class Analyzer {
 
 		Map<String, Integer> suspDocMap = null;
 		Map<String, Integer> srcDocMap = null;
-		BufferedWriter bwriter = null;
-		BufferedReader breader = null;
-		suspDocMap = Util.loadDocMap(getSuspMapPath());
-		srcDocMap = Util.loadDocMap(getSrcMapPath());
+		
+		suspDocMap = Util.loadDocMapFromIndex(Config.getSuspFeaturedIndexPath());
+		srcDocMap = Util.loadDocMapFromIndex(Config.getSrcFeaturedIndexPath());
 
 		BufferedReader in = new BufferedReader(new InputStreamReader(
 				new FileInputStream(Config.getJudgePath())));

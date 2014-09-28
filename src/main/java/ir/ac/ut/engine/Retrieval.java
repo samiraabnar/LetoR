@@ -4,8 +4,6 @@ import static ir.ac.ut.config.Config.configFile;
 import static ir.ac.ut.config.Config.getCandidatesMapPath;
 import static ir.ac.ut.config.Config.getLanguage;
 import static ir.ac.ut.config.Config.getSrcIndexPath;
-import static ir.ac.ut.config.Config.getSrcMapPath;
-import static ir.ac.ut.config.Config.getSuspMapPath;
 import ir.ac.ut.common.Util;
 import ir.ac.ut.config.Config;
 
@@ -151,7 +149,7 @@ public class Retrieval extends Engine implements Serializable {
 				set = candidates.get(value);
 			else
 				set = new TreeSet<Integer>();
-			while (set.size() != 100)
+			while (set.size() <= 100)
 				set.add(srcDocValues.get(random.nextInt(srcDocValues.size() - 1)));
 			candidates.put(value, set);
 		}

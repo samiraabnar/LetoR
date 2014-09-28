@@ -125,7 +125,7 @@ public class PlagiarizedSourceRanker {
 		
         psr.makeFeaturesReady(Util.loadCandidatesMap(Config
                     .getCandidatesMapPath()));
-	/*psr.makeFeaturesReady(Util.loadCandidatesMapTrecFormat(Config.getCandidatesMapPath()));*/
+	//psr.makeFeaturesReady(Util.loadCandidatesMapTrecFormat(Config.getCandidatesMapPath()));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -469,7 +469,7 @@ public class PlagiarizedSourceRanker {
     public void makeFeaturesReady(Map<Integer, Set<Integer>> candidates) throws IOException, ParseException{
     
     	 
-    	TreeMap<Integer, List<Pair<TreeMap<Integer, Float>, Integer>>> features =	extractLanguageModelBasedFeatures(candidates);
+  //  	TreeMap<Integer, List<Pair<TreeMap<Integer, Float>, Integer>>> features =	extractLanguageModelBasedFeatures(candidates);
         //writeFeatures(features);
     	Analyzer.makeFeaturesReady();
     }
